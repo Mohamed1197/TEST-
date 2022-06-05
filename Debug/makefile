@@ -8,8 +8,21 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include MCAL/MWDT/subdir.mk
+-include MCAL/MTimers/subdir.mk
+-include MCAL/MGI/subdir.mk
+-include MCAL/MEXTI/subdir.mk
 -include MCAL/MDIO/subdir.mk
+-include MCAL/MADC/subdir.mk
+-include HAL/HTMP/subdir.mk
+-include HAL/HSTP/subdir.mk
+-include HAL/HSRV/subdir.mk
+-include HAL/HLED/subdir.mk
+-include HAL/HLDR/subdir.mk
 -include HAL/HLCD/subdir.mk
+-include HAL/HKPD/subdir.mk
+-include HAL/H7SEG/subdir.mk
+-include HAL/DCMTR/subdir.mk
 -include APP/subdir.mk
 -include subdir.mk
 -include objects.mk
@@ -67,7 +80,7 @@ TTTTTEEESSSSSTTTTT.hex: TTTTTEEESSSSSTTTTT.elf
 
 sizedummy: TTTTTEEESSSSSTTTTT.elf
 	@echo 'Invoking: Print Size'
-	-avr-size --format=avr --mcu=atmega32 TTTTTEEESSSSSTTTTT.elf
+	-avr-size --format=berkeley -t TTTTTEEESSSSSTTTTT.elf
 	@echo 'Finished building: $@'
 	@echo ' '
 

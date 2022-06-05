@@ -1,22 +1,41 @@
-/*******************************************************************/
-/**************** Name    : Mohamed Ahmed Hafiz ********************/
-/**************** Date    : 21/8/2020           ********************/
-/**************** SWC     :   LCD               ********************/
-/**************** Version :   1.0               ********************/
-/*******************************************************************/
+/************************************************************************/
+/**************** Name    : Mohamed Ahmed Abdelhamid ********************/
+/**************** Date    :       28/05/2022         ********************/
+/**************** SWC     :         HLCD             ********************/
+/**************** Version :         1.0              ********************/
+/************************************************************************/
+
+
+/*******************************************************************************************************/
+/*                                       Include  LIB Layer                                            */
+/*******************************************************************************************************/
 #include "../../LIB/LSTD_TYPES.h"
 #include "../../LIB/LBIT_MATH.h"
 #define F_CPU 8000000UL
 #include <util/delay.h>
+/*#####################################################################################################*/
 
-/* MCAL */
+
+/*******************************************************************************************************/
+/*                                       Include  DIO Driver                                           */
+/*******************************************************************************************************/
 #include "../../MCAL/MDIO/MDIO_interface.h"
+/*#####################################################################################################*/
 
-/* HAL */
+
+/*******************************************************************************************************/
+/*                                    Include  LCD Header Files                                        */
+/*******************************************************************************************************/
 #include "HLCD_interface.h"
 #include "HLCD_private.h"
 #include "HLCD_config.h"
+/*#####################################################################################################*/
 
+
+
+/*******************************************************************************************************/
+/*                                    LCD Initialization Function                                      */
+/*******************************************************************************************************/
 void HLCD_voidInit     (void)
 {
 #if(LCD_MODE == LCD_8_BIT_MODE)
@@ -25,10 +44,13 @@ void HLCD_voidInit     (void)
 		/*send function set command*/
 		HLCD_voidSendCmnd(FUNCTION_SET);
 		_delay_us(40);
+		/*send LCD On Off command*/
 		HLCD_voidSendCmnd(LCD_DISPLAY_ON_OFF);
 		_delay_us(40);
+		/*send LCD Display Clear command*/
 		HLCD_voidSendCmnd(LCD_DISPLAY_CLEAR);
 		_delay_ms(2);
+		/*send Entry Mode Set command*/
 		HLCD_voidSendCmnd(LCD_ENTRY_MODE);
 	}
 #elif(LCD_MODE == LCD_4_BIT_MODE)
@@ -41,21 +63,34 @@ void HLCD_voidInit     (void)
 		HLCD_voidSendCmnd(FUNCTION_SET_4BITS>>4);
 		HLCD_voidSendCmnd(FUNCTION_SET_4BITS);
 		_delay_ms(1);
+		/*send LCD On Off command*/
 		HLCD_voidSendCmnd(LCD_DISPLAY_ON_OFF>>4);
 		HLCD_voidSendCmnd(LCD_DISPLAY_ON_OFF);
 		_delay_ms(1);
+		/*send LCD Display Clear command*/
 		HLCD_voidSendCmnd(LCD_DISPLAY_CLEAR>>4);
 		HLCD_voidSendCmnd(LCD_DISPLAY_CLEAR);
 		_delay_ms(2);
+		/*send Entry Mode Set command*/
 		HLCD_voidSendCmnd(LCD_ENTRY_MODE>>4);
 		HLCD_voidSendCmnd(LCD_ENTRY_MODE);
+	}
+#else
+	{
+      #error "Wrong LCD Mode Choice"
 	}
 #endif
 
 }
+/*#####################################################################################################*/
 
+
+/*******************************************************************************************************/
+/*                                   Clears LCD Display Function                                       */
+/*******************************************************************************************************/
 void HLCD_voidClear       (void)
 {
+
 #if(LCD_MODE == LCD_8_BIT_MODE)
 	{
 		HLCD_voidSendCmnd(LCD_DISPLAY_CLEAR);
@@ -69,9 +104,15 @@ void HLCD_voidClear       (void)
 	}
 #endif
 }
+/*#####################################################################################################*/
 
+
+/*******************************************************************************************************/
+/*                                   Turns off Cursor Blinker Function                                 */
+/*******************************************************************************************************/
 void HLCD_voidCursorBlinkerOff(void)
 {
+
 #if(LCD_MODE == LCD_8_BIT_MODE)
 	{
 		HLCD_voidSendCmnd(LCD_BLINKER_OFF);
@@ -86,7 +127,12 @@ void HLCD_voidCursorBlinkerOff(void)
 #endif
 
 }
+/*#####################################################################################################*/
 
+
+/*******************************************************************************************************/
+/*                                   LCD Send Command Function                                         */
+/*******************************************************************************************************/
 void HLCD_voidSendCmnd (u8 Copy_u8Cmnd)
 {
 #if(LCD_MODE == LCD_8_BIT_MODE)
@@ -122,8 +168,13 @@ void HLCD_voidSendCmnd (u8 Copy_u8Cmnd)
 #endif
 
 }
+/*#####################################################################################################*/
 
-void HLCD_voidSendChar (u8 Copy_u8Char)
+
+/*******************************************************************************************************/
+/*                              Configure LCD to Send Data Function                                    */
+/*******************************************************************************************************/
+static void HLCD_voidSendChar (u8 Copy_u8Char)
 {
 #if(LCD_MODE == LCD_8_BIT_MODE)
 	{
@@ -146,7 +197,7 @@ void HLCD_voidSendChar (u8 Copy_u8Char)
 		/* Rw = 0 */
 		MDIO_u8SetPinValue(LCD_u8_CONTROL_PORT,LCD_u8_RW_PIN,DIO_u8_LOW);
 
-		/* Send Char byte to the Data Pins of LCD */
+		/* Send Char byte to the 4 Data Pins of LCD */
 		MDIO_u8Set4PinsValue(LCD_u8_DATA_PORT,LCD_u8_4BIT_START_PIN,Copy_u8Char);
 		/* Pulse of Enable E = 1 , E = 0 */
 		MDIO_u8SetPinValue(LCD_u8_CONTROL_PORT,LCD_u8_E_PIN,DIO_u8_HIGH);
@@ -157,7 +208,12 @@ void HLCD_voidSendChar (u8 Copy_u8Char)
 #endif
 
 }
+/*#####################################################################################################*/
 
+
+/*******************************************************************************************************/
+/*                               Display Character on LCD Function                                     */
+/*******************************************************************************************************/
 void HLCD_voidWriteChar (u8 Copy_u8Char)
 {
 #if(LCD_MODE == LCD_8_BIT_MODE)
@@ -172,6 +228,12 @@ void HLCD_voidWriteChar (u8 Copy_u8Char)
 #endif
 
 }
+/*#####################################################################################################*/
+
+
+/*******************************************************************************************************/
+/*                               Display String on LCD Function                                        */
+/*******************************************************************************************************/
 void HLCD_voidWriteString (u8 * Copy_pu8String)
 {
 	if(Copy_pu8String != NULL )
@@ -191,6 +253,12 @@ void HLCD_voidWriteString (u8 * Copy_pu8String)
 	}
 
 }
+/*#####################################################################################################*/
+
+
+/*******************************************************************************************************/
+/*                           Configure Position on LCD Function                                        */
+/*******************************************************************************************************/
 u8 HLCD_u8_GoTo_XY     (u8 Copy_u8X,u8 Copy_u8Y)
 {
 
@@ -230,9 +298,16 @@ u8 HLCD_u8_GoTo_XY     (u8 Copy_u8X,u8 Copy_u8Y)
 	{
 		Local_u8ReturnState = STD_TYPES_NOK;
 	}
+	return Local_u8ReturnState;
 
 
 }
+/*#####################################################################################################*/
+
+
+/*******************************************************************************************************/
+/*                               Display Number on LCD Function                                        */
+/*******************************************************************************************************/
 void HLCD_voidWriteNumber (u32  Copy_u32Num)
 {
 
@@ -264,7 +339,12 @@ void HLCD_voidWriteNumber (u32  Copy_u32Num)
 
 
 }
+/*#####################################################################################################*/
 
+
+/*******************************************************************************************************/
+/*                Send And Display Special Character on LCD Function                                   */
+/*******************************************************************************************************/
 void HLCD_voidSendSpecialChar(u8 Copy_u8CharNo,u8 Copy_u8X,u8 Copy_u8Y,u8 * Copy_PSpecialChar)
 {
 #if(LCD_MODE == LCD_8_BIT_MODE)
@@ -340,7 +420,7 @@ void HLCD_voidSendSpecialChar(u8 Copy_u8CharNo,u8 Copy_u8X,u8 Copy_u8Y,u8 * Copy
 
 
 
-
+     /* Display Special Character on LCD */
 	for(u8 specialchar=0 ; specialchar<8 ; specialchar++ )
 	{
 		HLCD_voidWriteChar(Copy_PSpecialChar[specialchar]);
@@ -351,7 +431,12 @@ void HLCD_voidSendSpecialChar(u8 Copy_u8CharNo,u8 Copy_u8X,u8 Copy_u8Y,u8 * Copy
 
 
 }
+/*#####################################################################################################*/
 
+
+/*******************************************************************************************************/
+/*                        LCD Shift Display to The Right Function                                      */
+/*******************************************************************************************************/
 void HLCD_voidShiftDispRight(void)
 {
 #if(LCD_MODE == LCD_8_BIT_MODE)
@@ -365,6 +450,12 @@ void HLCD_voidShiftDispRight(void)
 	}
 #endif
 }
+/*#####################################################################################################*/
+
+
+/*******************************************************************************************************/
+/*                        LCD Shift Display to The Left Function                                      */
+/*******************************************************************************************************/
 void HLCD_voidShiftDispLeft(void)
 {
 #if(LCD_MODE == LCD_8_BIT_MODE)
@@ -378,4 +469,6 @@ void HLCD_voidShiftDispLeft(void)
 	}
 #endif
 }
+/*#####################################################################################################*/
+
 

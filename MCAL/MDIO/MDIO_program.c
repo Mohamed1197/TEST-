@@ -1,17 +1,34 @@
 /************************************************************************/
 /**************** Name    : Mohamed Ahmed Abdelhamid ********************/
-/**************** Date    :      23/05/2022          ********************/
-/**************** SWC     :         DIO              ********************/
+/**************** Date    :       28/05/2022         ********************/
+/**************** SWC     :         MDIO             ********************/
 /**************** Version :         1.0              ********************/
 /************************************************************************/
-/* Lib Layer*/
+
+
+/*******************************************************************************************************/
+/*                                       Include LIB Layer                                             */
+/*******************************************************************************************************/
 #include "../../LIB/LBIT_MATH.h"
 #include "../../LIB/LSTD_TYPES.h"
+#define F_CPU 8000000UL
+#include <util/delay.h>
+/*#####################################################################################################*/
+
+/*******************************************************************************************************/
+/*                                    Include DIO Header Files                                         */
+/*******************************************************************************************************/
 #include "MDIO_config.h"
 #include "MDIO_interface.h"
 #include "MDIO_private.h"
+/*#####################################################################################################*/
 
-u8 MDIO_u8Init            (void)
+
+
+/*******************************************************************************************************/
+/*                                    DIO Initialization Function                                      */
+/*******************************************************************************************************/
+void MDIO_u8Init            (void)
 {
      DDRA_u8_REG = CONC(DIO_u8_PA7_INITIAL_DIRECTION,DIO_u8_PA6_INITIAL_DIRECTION,DIO_u8_PA5_INITIAL_DIRECTION,DIO_u8_PA4_INITIAL_DIRECTION,
 	                    DIO_u8_PA3_INITIAL_DIRECTION,DIO_u8_PA2_INITIAL_DIRECTION,DIO_u8_PA1_INITIAL_DIRECTION,DIO_u8_PA0_INITIAL_DIRECTION); 
@@ -38,7 +55,12 @@ u8 MDIO_u8Init            (void)
 	                     DIO_u8_PD3_INITIAL_VALUE,DIO_u8_PD2_INITIAL_VALUE,DIO_u8_PD1_INITIAL_VALUE,DIO_u8_PD0_INITIAL_VALUE);
 
 }
+/*#####################################################################################################*/
 
+
+/*******************************************************************************************************/
+/*                                    DIO Set Pin Direction Function                                   */
+/*******************************************************************************************************/
 u8 MDIO_u8SetPinDirection (u8 Copy_u8PortID, u8 Copy_u8PinID, u8 Copy_u8PinDirection)
 {
 	u8 Local_u8ReturnState = STD_TYPES_OK;
@@ -101,6 +123,11 @@ u8 MDIO_u8SetPinDirection (u8 Copy_u8PortID, u8 Copy_u8PinID, u8 Copy_u8PinDirec
 	}
 	return Local_u8ReturnState;
 }
+/*#####################################################################################################*/
+
+/*******************************************************************************************************/
+/*                                    DIO Set Pin Value Function                                       */
+/*******************************************************************************************************/
 u8 MDIO_u8SetPinValue     (u8 Copy_u8PortID, u8 Copy_u8PinID, u8 Copy_u8PinValue)
 {
 	u8 Local_u8ReturnState = STD_TYPES_OK;
@@ -160,6 +187,11 @@ u8 MDIO_u8SetPinValue     (u8 Copy_u8PortID, u8 Copy_u8PinID, u8 Copy_u8PinValue
 	  }
 	return Local_u8ReturnState;
 }
+/*#####################################################################################################*/
+
+/*******************************************************************************************************/
+/*                                  DIO Get Pin Value Function                                         */
+/*******************************************************************************************************/
 u8 MDIO_u8GetPinValue     (u8 Copy_u8PortID, u8 Copy_u8PinID, u8 * Copy_pu8ReturnedPinValue)
 {
 	u8 Local_u8ReturnState = STD_TYPES_OK;
@@ -215,6 +247,11 @@ u8 MDIO_u8GetPinValue     (u8 Copy_u8PortID, u8 Copy_u8PinID, u8 * Copy_pu8Retur
 	}
 	return Local_u8ReturnState;
 }
+/*#####################################################################################################*/
+
+/*******************************************************************************************************/
+/*                                  DIO Set Port Direction Function                                    */
+/*******************************************************************************************************/
 u8 MDIO_u8SetPortDirection(u8 Copy_u8PortID, u8 Copy_u8PortDirection )
 {
 	u8 Local_u8ReturnState = STD_TYPES_OK;
@@ -258,7 +295,11 @@ u8 MDIO_u8SetPortDirection(u8 Copy_u8PortID, u8 Copy_u8PortDirection )
 	}
 	return Local_u8ReturnState;
 }
+/*#####################################################################################################*/
 
+/*******************************************************************************************************/
+/*                                  DIO Set Port Value Function                                        */
+/*******************************************************************************************************/
 u8 MDIO_u8SetPortValue    (u8 Copy_u8PortID, u8 Copy_u8PortValue)
 {
 	u8 Local_u8ReturnState = STD_TYPES_OK;
@@ -272,7 +313,11 @@ u8 MDIO_u8SetPortValue    (u8 Copy_u8PortID, u8 Copy_u8PortValue)
 	}
 	return Local_u8ReturnState;
 }
+/*#####################################################################################################*/
 
+/*******************************************************************************************************/
+/*                                  DIO Set 4 Pins Value Function                                      */
+/*******************************************************************************************************/
 u8 MDIO_u8Set4PinsValue    (u8 Copy_u8PortID, u8 Copy_u8PinStart, u8 Copy_u8PortValue)
 {
 	u8 Local_u8ReturnState = STD_TYPES_OK;
@@ -309,8 +354,11 @@ u8 MDIO_u8Set4PinsValue    (u8 Copy_u8PortID, u8 Copy_u8PinStart, u8 Copy_u8Port
 	return Local_u8ReturnState;
 
 }
+/*#####################################################################################################*/
 
-
+/*******************************************************************************************************/
+/*                                  DIO Get Port Value Function                                        */
+/*******************************************************************************************************/
 u8 MDIO_u8GetPortValue    (u8 Copy_u8PortID, u8 * Copy_pu8ReturnedPortValue)
 {
 	u8 Local_u8ReturnState = STD_TYPES_OK;
@@ -331,3 +379,4 @@ u8 MDIO_u8GetPortValue    (u8 Copy_u8PortID, u8 * Copy_pu8ReturnedPortValue)
 	}
 	return Local_u8ReturnState;
 }
+/*#####################################################################################################*/
